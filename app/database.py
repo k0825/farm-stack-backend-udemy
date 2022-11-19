@@ -1,6 +1,7 @@
 from typing import Union
 from decouple import config
 import motor.motor_asyncio
+from bson import ObjectId
 
 MONGO_API_KEY = config("MONGO_API_KEY")
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_API_KEY)
@@ -25,4 +26,18 @@ async def db_create_todo(data: dict) -> Union[dict, bool]:
     if new_todo:
         return todo_serializer(new_todo)
 
+    return False
+
+
+async def db_get_todos() -> list:
+    todos = []
+    for todo in await collection_todo.find().to_list(length=100):
+        todos.append(todo_serializer(todo))
+    return todos
+
+
+async def db_get_single_todo(id: str) -> Union[dict, bool]:
+    todo = await collection_todo.find_one({"_id": ObjectId(id)})
+    if todo:
+        return todo_serializer(todo)
     return False
