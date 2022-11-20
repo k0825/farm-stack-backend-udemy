@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from fastapi import Request, Response, HTTPException
+from fastapi import Response, HTTPException
 from fastapi.encoders import jsonable_encoder
 from schemas import Todo, TodoBody, SuccessMsg
 from database import (
@@ -16,7 +16,7 @@ router = APIRouter()
 
 
 @router.post("/api/todo", response_model=Todo)
-async def create_todo(request: Request, response: Response, data: TodoBody):
+async def create_todo(response: Response, data: TodoBody):
     todo = jsonable_encoder(data)
     res = await db_create_todo(todo)
     response.status_code = HTTP_201_CREATED
