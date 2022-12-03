@@ -26,7 +26,7 @@ async def create_todo(
     csrf_protect: CsrfProtect = Depends(),
 ):
     new_token = auth.verify_csrf_update_jwt(
-        request, csrf_protect, response.headers
+        request, csrf_protect, request.headers
     )
     todo = jsonable_encoder(data)
     res = await db_create_todo(todo)
@@ -80,7 +80,7 @@ async def get_update_todo(
     csrf_protect: CsrfProtect = Depends(),
 ):
     new_token = auth.verify_csrf_update_jwt(
-        request, csrf_protect, response.headers
+        request, csrf_protect, request.headers
     )
     todo = jsonable_encoder(data)
     res = await db_update_todo(id, todo)
@@ -105,7 +105,7 @@ async def get_delete_todo(
     csrf_protect: CsrfProtect = Depends(),
 ):
     new_token = auth.verify_csrf_update_jwt(
-        request, csrf_protect, response.headers
+        request, csrf_protect, request.headers
     )
     res = await db_delete_todo(id)
     response.set_cookie(
